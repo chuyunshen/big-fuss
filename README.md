@@ -4,7 +4,7 @@
 
 <h3 align="center">Trivial</h3>
 <p align="center">
-A party trivial app that displays user submitted quiz questions.
+A party trivia app that displays user submitted quiz questions.
 </p>
 
 ## Installation

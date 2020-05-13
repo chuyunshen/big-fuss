@@ -1,14 +1,22 @@
 package backend;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Question {
+
+    @Id
+    public String id;
+    private UUID playerId;
     private String prompt;
     private ArrayList<String> options;
     private ArrayList<Integer> correctAnswers;
 
-    public Question(String prompt, ArrayList<String> options, ArrayList<Integer> correctAnswers) {
+    public Question(UUID playerId, String prompt, ArrayList<String> options, ArrayList<Integer> correctAnswers) {
+        this.playerId = playerId;
         this.options = options;
         this.prompt = prompt;
         this.correctAnswers = correctAnswers;
