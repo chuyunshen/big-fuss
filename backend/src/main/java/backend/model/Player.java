@@ -1,21 +1,19 @@
-package backend;
+package backend.model;
 
-import java.util.UUID;
-
-import static java.util.UUID.randomUUID;
+import org.springframework.data.annotation.Id;
 
 public class Player {
-    private UUID id;
+    @Id
+    private String id;
     private Boolean isHost;
     private String name;
 
     public Player(Boolean isHost, String name) {
         this.isHost = isHost;
         this.name = name;
-        this.id = UUID.randomUUID();
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

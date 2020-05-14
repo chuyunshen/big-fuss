@@ -1,2 +1,4 @@
 .idea
 target
+src/main/resources/env
+src/main/resources/application.yml

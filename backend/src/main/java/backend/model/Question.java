@@ -1,4 +1,4 @@
-package backend;
+package backend.model;
 
 import org.springframework.data.annotation.Id;
 
@@ -8,8 +8,7 @@ import java.util.UUID;
 
 public class Question {
 
-    @Id
-    public String id;
+    private UUID id = UUID.randomUUID();
     private UUID playerId;
     private String prompt;
     private ArrayList<String> options;
@@ -20,6 +19,14 @@ public class Question {
         this.options = options;
         this.prompt = prompt;
         this.correctAnswers = correctAnswers;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getPlayerId() {
+        return playerId;
     }
 
     public String getPrompt() {

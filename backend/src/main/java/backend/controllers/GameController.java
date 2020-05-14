@@ -1,5 +1,7 @@
-package backend;
+package backend.controllers;
 
+import backend.model.Game;
+import backend.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,26 +12,25 @@ import java.util.List;
 public class GameController {
 
     @Autowired
-    private GameRepository repository;
+    private GameService service;
 
     @GetMapping("/")
     public List<Game> getAllGames() {
-        return repository.findAll();
+        return service.getAllGames();
     }
 
     @GetMapping("/{id}")
     public Game getGame(@PathVariable String id) {
-        return repository.findById(id).orElseThrow(() -> new GameNotFoundException(id));
+        return service.getGame(id);
     }
 
     @PostMapping("/")
-    public Game addGame(@RequestBody Game game) {
-        return repository.save(game);
+    public Game saveGame(@RequestBody Game game) {
+        return service.saveGame(game);
     }
 
     @DeleteMapping("{id}")
     public void deleteGame(@PathVariable String id) {
-        repository.deleteById(id);
+        service.deleteGame(id);
     }
-
 }
