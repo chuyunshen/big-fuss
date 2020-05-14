@@ -2,9 +2,10 @@ package backend.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.UUID;
+
 public class Player {
-    @Id
-    private String id;
+    private UUID id = UUID.randomUUID();
     private Boolean isHost;
     private String name;
 
@@ -13,7 +14,7 @@ public class Player {
         this.name = name;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
