@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const Login = () => {
+const SignUp = () => {
 };
 
 const styles = StyleSheet.create({
 });
 
-export default Login;
+export default SignUp;

@@ -1,46 +1,64 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import Header from './components/Header.js';
-import Option from './components/Option.js';
-import Prompt from './components/Prompt.js';
-import OptionInput from "./components/OptionInput";
-
+import React, { useState, useEffect } from 'react';
+import { View, Button, Text, StyleSheet, Image} from 'react-native';
+import { getCurrentUser } from './components/APIUtils';
+import SocialLogin from "./components/SocialLogin";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import NewGame from "./components/NewGame";
+import { NativeRouter, Switch, Route} from "react-router-native";
+import {ACCESS_TOKEN} from "./components/URLs";
+import { AsyncStorage } from "react-native";
+import Questions from "./components/Questions";
+import JoinGame from "./components/JoinGame";
+import Home from "./components/Home";
+import Room from "./components/Room";
 
 const App = () => {
-    const [options, setOptions] = useState([
-        { id:  "A", text: "She tripped and landed her face on concrete floor" },
-        { id:  "B", text: "Drinking from a bottle of Rosé" },
-        { id:  "C", text: "Opening a can of beans with her teeth" },
-        { id:  "D", text: "While making out" },
-    ]);
-
-    const [answer, setAnswer] = useState([ null ]);
-
-    const selectAnswer = (id) => {
-        setAnswer(id);
-    };
 
     return (
-        <View style={styles.container}>
-           <Header title='Trivial'/>
-           <Prompt item="How did Dena chip her front tooth?" />
-           <FlatList
-               data={options}
-               renderItem={({ item }) => <Option item={item} selectAnswer={selectAnswer()} /> }
-           />
-           <OptionInput />
-        </View>
+        <NativeRouter>
+            <View style={styles.container}>
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/components/NewGame" component={NewGame} />
+                    <Route exact path="/components/JoinGame" component={JoinGame} />
+                    <Route exact path="/components/Room" component={Room} />
+                </Switch>
+            </View>
+        </NativeRouter>
     );
 };
 
-/*     <Text style={styles.text}>Helloooooooooo</Text>
-    <Image source={{uri:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Edgar_Allan_Poe%2C_circa_1849%2C_restored%2C_squared_off.jpg/427px-Edgar_Allan_Poe%2C_circa_1849%2C_restored%2C_squared_off.jpg"}}
-        style={styles.image} />
- */
-
 const styles = StyleSheet.create({
-    container: {flex: 1, paddingTop: 60},
+    container: {
+        padding: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1
+    },
+    welcome: {fontSize: 40},
 });
 
+// <View style={styles.socialLogin}>
+//    <SocialLogin/>
+// </View>
+
+
+// <NativeRouter>
+//     <View style={styles.container}>
+//         <View>
+//             <Text>Welcome</Text>
+//         </View>
+//         <View style={styles.login}>
+//             <Link to="/signup" underlayColor="#f0f4f7" style={styles.navItem}>
+//                 <Text>Sign Up</Text>
+//             </Link>
+//             <Link to="/login" underlayColor="#f0f4f7" style={styles.navItem}>
+//                 <Text>Log In</Text>
+//             </Link>
+//         </View>
+//         <Route path="/signup" component={SignUp} />
+//         <Route path="/login" component={Login} />
+//     </View>
+// </NativeRouter>
 export default App;

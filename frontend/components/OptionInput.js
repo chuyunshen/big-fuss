@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 
 const OptionInput = ({}) => {
@@ -9,7 +9,6 @@ const OptionInput = ({}) => {
             <TextInput placeholder="Add Option" style={styles.input} />
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>
-                    <Icon name="plus" size={20}/>>
                 </Text>
             </TouchableOpacity>
         </View>

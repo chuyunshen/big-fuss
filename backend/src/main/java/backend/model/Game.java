@@ -46,6 +46,7 @@ public class Game {
     public Game(Player host, String secretCode, String gameType) {
         this.host = host;
         this.players = new ArrayList<>();
+        players.add(host);
         this.secretCode = secretCode;
         this.questions = new ArrayList<>();
         this.gameType = gameType;

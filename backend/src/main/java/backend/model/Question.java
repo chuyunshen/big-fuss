@@ -10,12 +10,15 @@ public class Question {
 
     private UUID id = UUID.randomUUID();
     private UUID playerId;
+    private String playerName;
     private String prompt;
     private ArrayList<String> options;
     private ArrayList<Integer> correctAnswers;
 
-    public Question(UUID playerId, String prompt, ArrayList<String> options, ArrayList<Integer> correctAnswers) {
+    public Question(UUID playerId, String playerName, String prompt, ArrayList<String> options,
+                    ArrayList<Integer> correctAnswers) {
         this.playerId = playerId;
+        this.playerName = playerName;
         this.options = options;
         this.prompt = prompt;
         this.correctAnswers = correctAnswers;
@@ -27,6 +30,10 @@ public class Question {
 
     public UUID getPlayerId() {
         return playerId;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public String getPrompt() {

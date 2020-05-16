@@ -10,7 +10,7 @@ const Prompt = ({item}) => {
 };
 
 const styles = StyleSheet.create({
-    promptView: {backgroundColor: "purple", alignItems: "center", justifyContent: "center"},
+    promptView: {marginTop: 60, backgroundColor: "purple", alignItems: "center", justifyContent: "center"},
     text: {fontSize: 25, color: "white"}
 });
 

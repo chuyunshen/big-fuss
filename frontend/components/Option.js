@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const Option = ({ item, selectAnswer }) => {
+const Option = ({ item, selectPlayerAnswer }) => {
+
     return (
-        <TouchableOpacity style={styles.option}>
-            <View
-                style={styles.optionView}
-                onPress={() => selectAnswer(item.id)}>
-                <Text style={styles.optionText}>
-                    { item.text }
+        <TouchableOpacity>
+            <View style={styles.view}
+                onPress={() => selectPlayerAnswer(item.id)}>
+                <Text style={styles.text}>
+                    { item }
                 </Text>
             </View>
         </TouchableOpacity>
@@ -16,15 +16,9 @@ const Option = ({ item, selectAnswer }) => {
 };
 
 const styles = StyleSheet.create({
-    option: {
-        marginTop:15,
-        padding: 15,
-        backgroundColor: "pink",
-        alignItems: "center",
-        justifyContent: "center"},
-    optionView: {},
-    optionText: {
-        fontSize: 20,
+    view: {margin: 20, backgroundColor: "lightgrey", alignItems: "center"},
+    text: {
+        fontSize: 30,
         color: "white"}
 });
 
