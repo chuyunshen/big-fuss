@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Button, TextInput, FlatList} from 'react-native';
 
 const DraftQuestion= ({history, location}) => {
 
-    const [questions, setQuestions] = useState(location.state.questions);
-    const [prompt, setPrompt] = useState(null);
-    const [option, setOption] = useState(null);
+    const [prompt, setPrompt] = useState('');
+    const [option, setOption] = useState('');
     const [options, setOptions] = useState([]);
     const [optionIndex, setOptionIndex] = useState(0);
 
@@ -18,6 +17,14 @@ const DraftQuestion= ({history, location}) => {
         }
     }
 
+    const verifyOptions = (options ) => {
+        if (options.length > 0) {
+            return true;
+        } else {
+            alert("You haven't entered any options")
+        }
+    }
+    
     return (
         <View>
             <Text>In the making of a new question!</Text>
@@ -28,15 +35,13 @@ const DraftQuestion= ({history, location}) => {
                 value={prompt} 
                 onChangeText={(prompt) => setPrompt(prompt)}
             />
-            <Button title='Save Prompt' 
-                onPress={() => verifyString(prompt) && setPrompt(prompt)} />
 
             <Text>Your options: </Text>
 
             <FlatList 
                 data={options}
                 extraData={options}
-                renderItem={({item}) => <Text> {item.option} </Text>}
+                renderItem={({item}) => <Text>{(item.optionIndex + 10).toString(36).toUpperCase()}. {item.option}</Text>}
                 keyExtractor={(item) => item.optionIndex}
                 style={styles.flatList}
             />
@@ -52,18 +57,36 @@ const DraftQuestion= ({history, location}) => {
                     if (verifyString(option)) {
                         setOptions([...options, {optionIndex, option}]);
                         setOptionIndex(optionIndex + 1);
+                        setOption(null);
                     }
                 }
             } />
 
             <Button title="Save and go back" 
                 onPress={() => {
-                    setQuestions([...questions, {questionIndex: questions.length, prompt, options}]).then(
-                        history.push('/components/DraftQuestions', {questions}))
-                    }
-                }/>
-            {console.log("supposed to print the questions here")}
-            {console.log(questions)}
+                    if (verifyString(prompt) && verifyOptions) {
+                    history.push('/components/DraftQuestions', 
+                        {questions: 
+                            [...(location.state.questions || []), 
+                                {questionIndex: 
+                                    (location.state.questions ? location.state.questions.length : 0), 
+                                    prompt, options}],
+                        name: location.state.name,
+                        isHost: location.state.isHost,
+                        gameLink: location.state.gameLink,
+                                });
+                    }}}
+                />
+            <Button title="Go back without saving" 
+                onPress={() => {
+                    history.push('/components/DraftQuestions', 
+                        {questions: location.state.questions,
+                        gameLink: location.state.gameLink,
+                        name: location.state.name,
+                        isHost: location.state.isHost
+                        });
+                    }}
+                />
         </View>
     )
 };

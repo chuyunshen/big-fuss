@@ -6,40 +6,60 @@ const Room = ({history, location}) => {
 
     const [players, setPlayers] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isHost, setIsHost] = useState(true);
+    const [isHost, setIsHost] = useState(false);
     const [isLoadingHost, setIsLoadingHost] = useState(true);
 
-    const getOtherPlayersReadyInfo = () => {
-        console.log(location);
+    const getPlayers = () => {
         fetch(`${location.state.gameLink}`)
             .then(response => response.json())
             .then((response) => {
-                console.log("lalalalal");
-                console.log(response);
-                console.log(response.players);;
+                console.log(response.players)
                 setPlayers(response.players);
             })
     }
 
     const startGame = (name) => {
         fetch(`${location.state.gameLink}`)
-        history.push('/components/DraftQuestions', {name});
+        history.push('/components/DraftQuestions', 
+            {
+                gameLink: location.state.gameLink, 
+                name,
+                isHost});
     }
 
     const checkIsHost = () => {
         fetch(`${location.state.gameLink}`)
         .then((response) => response.json())
         .then((response) => {
-            if (response.players[0].name === location.state.name) {
+            if (response.host.name === location.state.name) {
                 setIsHost(true);
+            } else {
+                fetch(`${location.state.gameLink}/players`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        isHost: false,
+                        name,
+                        isReady: false
+                    }),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
             }
         })
     }
 
-
     useEffect(() => {
         checkIsHost();
-    }, [getOtherPlayersReadyInfo])
+    }, [])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getPlayers();
+        }, 2000);
+        return () => clearInterval(interval);
+    }, [])
 
     return (
         <View style={styles.view}>
@@ -48,21 +68,25 @@ const Room = ({history, location}) => {
                 Welcome to the room with secret code: {location.state.secretCode} {"\n"}
             </Text>
 
-            { players ? <ActivityIndicator /> : (
-                <FlatList
-                    data={players} 
-                    renderItem={({player}) => <Text>{player.name}</Text>}
-                />
+            { !players ? <ActivityIndicator /> : (
+                <View>
+                    <Text>Players that have joined: </Text>
+                    <FlatList
+                        style={styles.flatList}
+                        data={players} 
+                        extraData={players} 
+                        renderItem={({item}) => <Text>{item.name}</Text>}
+                        keyExtractor={(item) => {item.name}}
+                    />
+                </View>
             )}
-            <Text>Waiting for other players to join... {"\n"}
-            </Text>
 
-            { (!isLoadingHost) && isHost ? <Text>
-                Not Host. Please get ready. Game will start as soon as all players have joined.
+            {  !isHost ? <Text>
+                Waiting for all the players to enter and room...
                     </Text> : (
                 <View>
-                    <Text>
-                        You are the host! Start the game when all players have entered the room.
+                    <Text>You are the host! {"\n"}
+                    Start the game when all players have entered the room.
                     </Text>
                     <Button 
                     title="Start the game"
@@ -84,6 +108,9 @@ const Room = ({history, location}) => {
 const styles = StyleSheet.create({
     view: {
         justifyContent: "center", alignItems: "center", flex: 1
+    },
+    flatList: {
+        flexGrow: 0
     }
 })
 

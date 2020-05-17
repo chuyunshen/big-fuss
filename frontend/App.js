@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Room from "./components/Room";
 import DraftQuestions from "./components/DraftQuestions";
 import DraftQuestion from "./components/DraftQuestion";
+import ReadyRoom from './components/ReadyRoom';
 // import { getCurrentUser } from './components/APIUtils';
 // import SocialLogin from "./components/SocialLogin";
 // import Login from "./components/Login";
@@ -26,6 +27,7 @@ const App = () => {
                     <Route exact path="/components/Room" component={Room} />
                     <Route exact path="/components/DraftQuestions" component={DraftQuestions} />
                     <Route exact path="/components/DraftQuestion" component={DraftQuestion} />
+                    <Route exact path="/components/ReadyRoom" component={ReadyRoom} />
                 </Switch>
             </View>
         </NativeRouter>

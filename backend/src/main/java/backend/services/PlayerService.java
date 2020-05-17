@@ -19,6 +19,12 @@ public class PlayerService {
         gameService.saveGame(game);
     }
 
+    public void updatePlayer(String gameId, Player player) {
+        Game game = gameService.getGame(gameId);
+        game.updatePlayer(player);
+        gameService.saveGame(game);
+    }
+
     public List<Player> getAllPlayers(String gameId) {
         return gameService.getGame(gameId).getPlayers();
     }

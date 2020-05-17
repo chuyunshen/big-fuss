@@ -16,21 +16,21 @@ public class PopulateRepositoryService {
     private GameRepository gameRepository;
     public void populate() {
         gameRepository.deleteAll();
-        Player player = new Player(true, "Alex Turner");
+        Player player = new Player(true, "Alex Turner", false);
         Question question = new Question(
                 player.getId(), player.getName(),
                 "What does the Bloody Mary lack?",
                 new ArrayList<>(Arrays.asList("Tabasco", "Salt", "Pepper", "Coconut")),
                 new ArrayList<>(Arrays.asList(0)));
 
-        Player player2 = new Player(false, "Skeeter Davis");
+        Player player2 = new Player(false, "Skeeter Davis", false);
         Question question2 = new Question(
                 player2.getId(), player2.getName(),
                 "Gonna get along with whom now?",
                 new ArrayList<>(Arrays.asList("Him", "You", "Me", "Her")),
                 new ArrayList<>(Arrays.asList(1)));
 
-        Player player3 = new Player(false, "Arnold");
+        Player player3 = new Player(false, "Arnold", false);
         Question question3 = new Question(
                 player3.getId(), player3.getName(),
                 "Instead of BuonGiorno, what do I say?",

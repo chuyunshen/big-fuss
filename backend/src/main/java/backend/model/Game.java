@@ -64,6 +64,14 @@ public class Game {
         players.add(player);
     }
 
+    public void updatePlayer(Player player) {
+        for (int i=0; i < players.size(); i++) {
+            if (players.get(i).getName().equals(player.getName())) {
+                players.set(i, player);
+            }
+        }
+    }
+
     public void addQuestion(Question question) {
         questions.add(question);
     }
