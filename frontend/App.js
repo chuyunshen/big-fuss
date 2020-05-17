@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, Text, StyleSheet, Image} from 'react-native';
-import { getCurrentUser } from './components/APIUtils';
-import SocialLogin from "./components/SocialLogin";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
 import NewGame from "./components/NewGame";
 import { NativeRouter, Switch, Route} from "react-router-native";
-import {ACCESS_TOKEN} from "./components/URLs";
-import { AsyncStorage } from "react-native";
-import Questions from "./components/Questions";
 import JoinGame from "./components/JoinGame";
 import Home from "./components/Home";
 import Room from "./components/Room";
+import DraftQuestions from "./components/DraftQuestions";
+import DraftQuestion from "./components/DraftQuestion";
+// import { getCurrentUser } from './components/APIUtils';
+// import SocialLogin from "./components/SocialLogin";
+// import Login from "./components/Login";
+// import SignUp from "./components/SignUp";
+// import {ACCESS_TOKEN} from "./components/URLs";
+// import { AsyncStorage } from "react-native";
 
 const App = () => {
 
@@ -23,6 +24,8 @@ const App = () => {
                     <Route exact path="/components/NewGame" component={NewGame} />
                     <Route exact path="/components/JoinGame" component={JoinGame} />
                     <Route exact path="/components/Room" component={Room} />
+                    <Route exact path="/components/DraftQuestions" component={DraftQuestions} />
+                    <Route exact path="/components/DraftQuestion" component={DraftQuestion} />
                 </Switch>
             </View>
         </NativeRouter>
@@ -35,8 +38,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         flex: 1
-    },
-    welcome: {fontSize: 40},
+    }
 });
 
 // <View style={styles.socialLogin}>

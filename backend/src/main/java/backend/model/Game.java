@@ -14,6 +14,7 @@ public class Game {
     private ArrayList<Question> questions;
     private HashMap<String, Integer> points;
     private String gameType;
+    private Integer roomSize;
 
     public Player getHost() {
         return host;
@@ -43,13 +44,18 @@ public class Game {
         return gameType;
     }
 
-    public Game(Player host, String secretCode, String gameType) {
+    public Integer getRoomSize() {
+        return roomSize;
+    }
+
+    public Game(Player host, String secretCode, String gameType, Integer roomSize) {
         this.host = host;
         this.players = new ArrayList<>();
         players.add(host);
         this.secretCode = secretCode;
         this.questions = new ArrayList<>();
         this.gameType = gameType;
+        this.roomSize = roomSize;
         this.points = new HashMap<>();
     }
 
