@@ -4,7 +4,7 @@ import {retrievePlayers, retrieveQuestions} from "../service/QuestionService";
 import Question from "./Question";
 
 
-const Questions = () => {
+const Questions = ({history, location}) => {
 
     const [isLoading, setLoading] = useState(true);
     const [questions, setQuestions] = useState(null);
@@ -15,21 +15,35 @@ const Questions = () => {
         setQuestionIndex(questionIndex + 1);
     };
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/games/5ebf0d4a05a1625ae73a2452/questions`)
+    const incrementPoints = () => {
+
+    }
+    console.log(`${location.state.gameLink}/questions`);
+
+    const getQuestions = () => {
+        fetch(`${location.state.gameLink}/questions`)
             .then((response) => response.json())
-            .then((json) => {
-                setQuestions(json);
-                console.log(json)
+            .then((response) => {
+                setQuestions(response);
+                console.log(response)
             })
             .catch((error) => console.error(error))
             .finally(() => setLoading(false));
+    }
+
+    useEffect(() => {
+        getQuestions();
     }, []);
+
     return (
         <View>
             {isLoading ? <ActivityIndicator/> : (
-            <Question questionItem={questions[questionIndex]} questionNumber={questionIndex + 1} onPress={submitAnswer}/>
-                )}
+                <View>
+                    <Question 
+                        questionItem={questions[questionIndex]} 
+                        questionNumber={questionIndex + 1} 
+                        onPress={submitAnswer}/>
+                </View>)}
         </View>
     );
 };

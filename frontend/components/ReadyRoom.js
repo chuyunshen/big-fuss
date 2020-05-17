@@ -5,7 +5,6 @@ import {API_BASE_URL} from './URLs';
 const ReadyRoom = ({history, location}) => {
 
     const [readyPlayers, setReadyPlayers] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
 
     const makeReady = () => {
         fetch(`${location.state.gameLink}/players`, {
@@ -23,48 +22,60 @@ const ReadyRoom = ({history, location}) => {
     }
 
     const getReadyPlayers = () => {
-        console.log(`${location.state.gameLink}/players`);
         fetch(`${location.state.gameLink}/players`)
             .then(response => response.json())
             .then((response) => {
-                let players = response.filter(player => player.isReady);
+                const players = response.filter(player => player.isReady);
                 setReadyPlayers(players);
             })
     }
 
-
-    const startGame = (name) => {
-        fetch(`${location.state.gameLink}`)
-        history.push('/components/DraftQuestions', {name});
+    const startGame = () => {
+        // check if everyone is ready
+        fetch(`${location.state.gameLink}/players`)
+            .then(response => response.json())
+            .then((response) => {
+                console.log(response);
+                const players = response.filter(player => player.isReady);
+                if (players.length == response.length) {
+                    history.push('/components/Questions', {
+                        gameLink: location.state.gameLink,
+                        question: location.state.questions,
+                        isHost: location.state.isHost,
+                        name: location.state.name});
+                    };
+            })
     }
 
+    useEffect(() => {
+        makeReady();
+    }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
             getReadyPlayers();
+            startGame();
         }, 5000);
-        makeReady();
         return () => clearInterval(interval);
     }, [])
 
     return (
-        <View style={styles.view}>
+        <View>
             <Text>
                 Hi, {location.state.name}! {"\n"} 
             </Text>
 
+            <Text>Players who have submitted their questions: </Text>
             { !readyPlayers ? <ActivityIndicator /> : (
-                <ScrollView>
-                    <View>
-                        <Text>Players who have submitted their questions: </Text>
-                        <FlatList
-                            style={styles.flatList}
-                            data={readyPlayers} 
-                            renderItem={({item}) => <Text>{item.name}</Text>}
-                            keyExtractor={({item}) => {item.name}}
-                        />
-                    </View>
-                </ScrollView>
+                <View>
+                    <FlatList
+                        style={styles.flatList}
+                        data={readyPlayers} 
+                        extraData={readyPlayers} 
+                        renderItem={({item}) => <Text>{item.name}</Text>}
+                        keyExtractor={(item) => {item.name}}
+                    />
+                </View>
             )}
 
             <Text>Please get ready.{"\n"}
@@ -74,12 +85,7 @@ const ReadyRoom = ({history, location}) => {
 };
 
 const styles = StyleSheet.create({
-    view: {
-        justifyContent: "center", alignItems: "center", flex: 1
-    },
     flatList: {
-        justifyContent: "center", 
-        alignItems: "center", 
         flexGrow: 0
     }
 })

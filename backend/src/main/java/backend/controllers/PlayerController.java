@@ -24,7 +24,7 @@ public class PlayerController {
         service.savePlayer(gameId, player);
     }
 
-    @PutMapping("/games/{gameId/players")
+    @PutMapping("/games/{gameId}/players")
     public void updatePlayer(@PathVariable String gameId, @RequestBody Player player) {
         service.updatePlayer(gameId, player);
     }

@@ -23,14 +23,14 @@ public class PopulateRepositoryService {
                 new ArrayList<>(Arrays.asList("Tabasco", "Salt", "Pepper", "Coconut")),
                 new ArrayList<>(Arrays.asList(0)));
 
-        Player player2 = new Player(false, "Skeeter Davis", false);
+        Player player2 = new Player(false, "Skeeter Davis", true);
         Question question2 = new Question(
                 player2.getId(), player2.getName(),
                 "Gonna get along with whom now?",
                 new ArrayList<>(Arrays.asList("Him", "You", "Me", "Her")),
                 new ArrayList<>(Arrays.asList(1)));
 
-        Player player3 = new Player(false, "Arnold", false);
+        Player player3 = new Player(false, "Arnold", true);
         Question question3 = new Question(
                 player3.getId(), player3.getName(),
                 "Instead of BuonGiorno, what do I say?",

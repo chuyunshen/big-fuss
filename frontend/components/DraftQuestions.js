@@ -13,18 +13,19 @@ const DraftQuestions = ({history, location}) => {
         }
     }
 
+    console.log(location.state.questions);
+    console.log(location.state.gameLink);
+
     return (
         <View>
             <Text>You can add your personalized questions here!</Text>
             { location.state.questions ?  (
             <FlatList 
                 data={location.state.questions}
-                renderItem={({item}) => {
+                renderItem={({item}) => (
                     <TouchableOpacity>
-                        <Text>
-                            "print soething"
-                            {item.questionIndex + 1}. {item.prompt}</Text>
-                    </TouchableOpacity>}}
+                        <Text>{item.questionIndex + 1}. {item.prompt}</Text>
+                    </TouchableOpacity>)}
                 keyExtractor={(item) => item.questionIndex}
                 style={styles.flatList}
             />) : <Text>There is no question yet</Text>

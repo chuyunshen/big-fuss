@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, FlatList, Image} from 'react-native';
 import Prompt from "./Prompt";
-import OptionInput from "./OptionInput";
 import Option from "./Option";
 
 const QuestionMaster = ({name}) => {
