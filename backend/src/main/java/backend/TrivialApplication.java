@@ -18,20 +18,4 @@ public class TrivialApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		service.populate();
 	}
-//	@Override
-//	public void run(String... args) throws Exception {
-//		repository.deleteAll();
-//
-//		Player host = new Player(true, "Host");
-//		Question question = new Question(host.getId(), "prompt",
-//				new ArrayList<>(Arrays.asList("Option A", "Option B")),
-//				new ArrayList<>(0));
-//		Game game = new Game(host, "hotSauce", "personal");
-//		game.addQuestion(question);
-//		repository.save(game);
-//
-//		for (Game g: repository.findAll()) {
-//		  System.out.println(g);
-//		}
-//	}
 }

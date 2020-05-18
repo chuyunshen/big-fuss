@@ -37,11 +37,13 @@ const JoinGame = ({ history }) => {
             <TextInput
                 placeholder="Your name"
                 value={name}
-                onChangeText={text => verifyName && setName(text)}>
+                onChangeText={text => setName(text)}>
             </TextInput>
             <Button title="Submit" onPress={() => {
-                setSecretCode(secretCode.toLowerCase());
-                verifySecretCode(secretCode.toLowerCase(), name);
+                if (verifyName(name)) {
+                    setSecretCode(secretCode.toLowerCase());
+                    verifySecretCode(secretCode.toLowerCase(), name);
+                }
                 }}
                 />
             <Button title="Return to home page" onPress={() => history.push('/')} />

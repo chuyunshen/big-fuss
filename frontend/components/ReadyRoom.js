@@ -18,7 +18,6 @@ const ReadyRoom = ({history, location}) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }})
-
     }
 
     const getReadyPlayers = () => {

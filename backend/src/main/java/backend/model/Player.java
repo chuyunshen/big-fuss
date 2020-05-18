@@ -7,12 +7,14 @@ public class Player {
     private Boolean isHost;
     private String name;
     private Boolean isReady;
+    private Integer points;
 
-    public Player(Boolean isHost, String name, Boolean isReady) {
+    public Player(Boolean isHost, String name, Boolean isReady, Integer points) {
         this.isHost = isHost;
         this.name = name;
         this.id = UUID.randomUUID();
         this.isReady = isReady;
+        this.points = points;
     }
 
     public UUID getId() {
@@ -28,6 +30,10 @@ public class Player {
     }
 
     public String getName() {
+        return name;
+    }
+
+    public String getPoints() {
         return name;
     }
 }

@@ -9,16 +9,20 @@ const Questions = ({history, location}) => {
     const [isLoading, setLoading] = useState(true);
     const [questions, setQuestions] = useState(null);
     const [questionIndex, setQuestionIndex] = useState(0);
-    const [numberOfQuestions, setNumbersOfQuestions] = useState(null);
+    const [playerAnswers, setPlayerAnswers] = useState([]);
 
     const submitAnswer = () => {
         setQuestionIndex(questionIndex + 1);
     };
 
-    const incrementPoints = () => {
-
+    // checks answer for a single question
+    const checkAnswers = (questionIndex) => {
+        if (questions[questionIndex].correctAnswers.sort() == playerAnswers[questionIndex].sort()) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    console.log(`${location.state.gameLink}/questions`);
 
     const getQuestions = () => {
         fetch(`${location.state.gameLink}/questions`)
@@ -26,7 +30,7 @@ const Questions = ({history, location}) => {
             .then((response) => {
                 setQuestions(response);
                 console.log(response)
-            })
+            } )
             .catch((error) => console.error(error))
             .finally(() => setLoading(false));
     }
@@ -35,17 +39,38 @@ const Questions = ({history, location}) => {
         getQuestions();
     }, []);
 
+    // Take to score board
+    useEffect(() => {
+        if (!isLoading && questionIndex == questions.length) {
+            history.push('/components/ScoreBoard', {
+                gameLink: location.state.gameLink,
+                name: location.state.name,
+                questions,
+                playerAnswers
+            });
+        }
+    
+    });
+
     return (
         <View>
-            {isLoading ? <ActivityIndicator/> : (
+            {!isLoading && questionIndex < questions.length ? (
                 <View>
                     <Question 
                         questionItem={questions[questionIndex]} 
                         questionNumber={questionIndex + 1} 
-                        onPress={submitAnswer}/>
-                </View>)}
+                        appendAnswers={
+                            (newAnswers) => setPlayerAnswers([...playerAnswers, newAnswers])}
+                        updateQuestionIndex={() => {setQuestionIndex(questionIndex + 1)}}
+                        checkAnswers={checkAnswers}
+                            />
+                </View>) : <ActivityIndicator/> }
         </View>
     );
 };
+
+StyleSheet.create({
+    scoreBoard: {}
+})
 
 export default Questions;
