@@ -26,7 +26,6 @@ const Questions = ({history, location}) => {
         getQuestions();
     }, []);
 
-
     // Take to score board
     useEffect(() => {
         if (!isLoading && questionIndex == questions.length) {

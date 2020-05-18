@@ -21,33 +21,25 @@ const ReadyRoom = ({history, location}) => {
             }});
     }
 
-    /* Post a question to the API */
+    /* Post questions to the API */
     const sendQuestions = () => {
         for (const question of location.state.questions) {
             let options = [];
-            for (const option in question.options) {
+            for (const option of question.options) {
                 options.push(option.option);
             }
-            console.log(question);
-            console.log(JSON.stringify({
-                playerName: location.state.name,
-                prompt: question.prompt,
-                options: question.options,
-                correctAnswers: question.correctAnswers
-            }));
             fetch(`${location.state.gameLink}/questions/${location.state.round}`, {
                 method: 'POST',
                 mode: 'cors',
                 body: JSON.stringify({
                     playerName: location.state.name,
                     prompt: question.prompt,
-                    options: question.options,
+                    options: options,
                     correctAnswers: question.correctAnswers
                 }),
                 headers: {
-                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
-            }}).catch(error => console.log(error))
+            }}).catch(error => console.error(error))
         }
     }
 
@@ -70,7 +62,9 @@ const ReadyRoom = ({history, location}) => {
                     history.push('/components/Questions', {
                         gameLink: location.state.gameLink,
                         isHost: location.state.isHost,
-                        name: location.state.name});
+                        name: location.state.name,
+                        round: location.state.round
+                    });
                     };
             })
     }

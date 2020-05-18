@@ -5,20 +5,12 @@ import { API_BASE_URL } from './URLs';
 
 
 const NewGame = ({history}) => {
-    const [roomSize, setRoomSize] = useState('');
     const [secretCode, setSecretCode] = useState('');
     const [gameLink, setGameLink] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [json, setJson] = useState(null);
     const [name, setName] = useState(null);
-    const verifyRoomSize = (roomSize) => {
-        if (!parseInt(roomSize) > 0 ) {
-            alert("You need at least one person to start a game.");
-            return false;
-        } else {
-            return true;
-        }
-    };
+
     const verifySecretCode = (secretCode) => {
         if (secretCode.trim() === '') {
             alert("Secret code cannot be blank.");
@@ -32,13 +24,12 @@ const NewGame = ({history}) => {
         }
     };
 
-    const startNewGame = (roomSize, secretCode, history) => {
-        if (verifyRoomSize(roomSize) && verifySecretCode(secretCode)) {
+    const startNewGame = (secretCode, history) => {
+        if (verifySecretCode(secretCode)) {
             let payload = {
                 host: {isHost: true, name: "hehe"},
                 secretCode,
                 gameType: "personal",
-                roomSize
             };
             fetch(`${API_BASE_URL}/games`, {
                 method: 'POST',
@@ -50,16 +41,11 @@ const NewGame = ({history}) => {
                 }})
                 .then((response) => response.json())
                 .then((response) => {
-                    console.log(response);
                     setGameLink(response._links.game);
                     setSecretCode(secretCode.toLowerCase());
                     history.push('/components/Room', {gameLink, secretCode, name, round: 0});
                     }
                 )
-                // .catch(() => {
-                // setJson("broken");
-                // setIsLoading(false);
-            // });
         }
     };
 
@@ -68,12 +54,6 @@ const NewGame = ({history}) => {
             {isLoading ? <ActivityIndicator/> : (
                 <Text>{json} hiiii</Text>
             )}
-            <Text style={styles.text}>How many players are there?</Text>
-            <TextInput
-                placeholder="Number of players"
-                value={roomSize}
-                onChangeText={text => setRoomSize(text)}>
-            </TextInput>
             <Text style={styles.text}>Make up a secret code such as "hot sauce", {"\n"}
             and let the other players know:</Text>
             <TextInput
@@ -89,7 +69,7 @@ const NewGame = ({history}) => {
             </TextInput>
             <Button title="Start New Game"
                     onPress={() => {
-                        startNewGame(roomSize, secretCode, history)
+                        startNewGame(secretCode, history)
                     }}
             />
             <Button title="Return to home page" onPress={() => history.push('/')} />

@@ -14,7 +14,6 @@ public class Game {
     private String id;
     private String secretCode;
     private String gameType;
-    private Integer roomSize;
 
     public Player getHost() {
         return host;
@@ -40,18 +39,13 @@ public class Game {
         return gameType;
     }
 
-    public Integer getRoomSize() {
-        return roomSize;
-    }
-
-    public Game(Player host, String secretCode, String gameType, Integer roomSize) {
+    public Game(Player host, String secretCode, String gameType) {
         this.host = host;
         this.players = new ArrayList<>();
         players.add(host);
         this.secretCode = secretCode;
         this.questions = new HashMap<>();
         this.gameType = gameType;
-        this.roomSize = roomSize;
     }
 
 

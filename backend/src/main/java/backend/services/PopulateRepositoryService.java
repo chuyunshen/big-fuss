@@ -36,8 +36,7 @@ public class PopulateRepositoryService {
                 "Instead of BuonGiorno, what do I say?",
                 new ArrayList<>(Arrays.asList("Good Morrow", "BienGiorno", "DiGiorno", "Hi")),
                 new ArrayList<>(Arrays.asList(2)));
-        Integer roomSize = 3;
-        Game game = new Game(player, "hot sauce", "personal", roomSize);
+        Game game = new Game(player, "hot sauce", "personal");
         game.addPlayer(player2);
         game.addPlayer(player3);
         game.addQuestion(0, question);

@@ -18,4 +18,5 @@ public class TrivialApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		service.populate();
 	}
+
 }

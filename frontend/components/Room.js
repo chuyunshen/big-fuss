@@ -13,7 +13,6 @@ const Room = ({history, location}) => {
         fetch(`${location.state.gameLink}`)
             .then(response => response.json())
             .then((response) => {
-                console.log(response.players)
                 setPlayers(response.players);
             })
     }
@@ -24,7 +23,7 @@ const Room = ({history, location}) => {
             {
                 gameLink: location.state.gameLink, 
                 round: location.state.round,
-                name,
+                name: location.state.name,
                 round: location.state.round,
                 isHost});
     }
