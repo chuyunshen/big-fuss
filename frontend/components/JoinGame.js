@@ -12,7 +12,7 @@ const JoinGame = ({ history }) => {
             .then((response) => {
                 setGameLink(`${API_BASE_URL}games/${response.id}`);
                 history.push('/components/Room', 
-                {gameLink: `${API_BASE_URL}games/${response.id}`, secretCode, name})})
+                {gameLink: `${API_BASE_URL}games/${response.id}`, secretCode, name, round: 0})})
             .catch(() => alert("This secret code does not exist. Please retry."))
     };
 

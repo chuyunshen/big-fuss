@@ -11,25 +11,12 @@ const Questions = ({history, location}) => {
     const [questionIndex, setQuestionIndex] = useState(0);
     const [playerAnswers, setPlayerAnswers] = useState([]);
 
-    const submitAnswer = () => {
-        setQuestionIndex(questionIndex + 1);
-    };
-
-    // checks answer for a single question
-    const checkAnswers = (questionIndex) => {
-        if (questions[questionIndex].correctAnswers.sort() == playerAnswers[questionIndex].sort()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     const getQuestions = () => {
         fetch(`${location.state.gameLink}/questions`)
             .then((response) => response.json())
             .then((response) => {
-                setQuestions(response);
-                console.log(response)
+                // get the latest set of questions
+                setQuestions(response[Object.keys(response).length - 1]);
             } )
             .catch((error) => console.error(error))
             .finally(() => setLoading(false));
@@ -39,6 +26,7 @@ const Questions = ({history, location}) => {
         getQuestions();
     }, []);
 
+
     // Take to score board
     useEffect(() => {
         if (!isLoading && questionIndex == questions.length) {
@@ -46,7 +34,9 @@ const Questions = ({history, location}) => {
                 gameLink: location.state.gameLink,
                 name: location.state.name,
                 questions,
-                playerAnswers
+                playerAnswers,
+                isHost: location.state.isHost,
+                round: location.state.round
             });
         }
     
@@ -60,9 +50,10 @@ const Questions = ({history, location}) => {
                         questionItem={questions[questionIndex]} 
                         questionNumber={questionIndex + 1} 
                         appendAnswers={
-                            (newAnswers) => setPlayerAnswers([...playerAnswers, newAnswers])}
+                            (newAnswers) => {
+                                setPlayerAnswers([...playerAnswers, {questionIndex, answers: newAnswers}])}
+                            }
                         updateQuestionIndex={() => {setQuestionIndex(questionIndex + 1)}}
-                        checkAnswers={checkAnswers}
                             />
                 </View>) : <ActivityIndicator/> }
         </View>

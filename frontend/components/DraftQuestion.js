@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Button, TextInput, FlatList} from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, FlatList, TouchableOpacity} from 'react-native';
+
+//TODO: add correct answer by highliting
 
 const DraftQuestion= ({history, location}) => {
 
@@ -7,9 +9,10 @@ const DraftQuestion= ({history, location}) => {
     const [option, setOption] = useState('');
     const [options, setOptions] = useState([]);
     const [optionIndex, setOptionIndex] = useState(0);
+    const [pressedIndices, setPressedIndices] = useState([]);
 
     const verifyString = (string) => {
-        if (string.trim() === '') {
+        if ((!string) || (string.trim() === '')) {
             alert("Field cannot be blank")
             return false;
         } else {
@@ -17,14 +20,22 @@ const DraftQuestion= ({history, location}) => {
         }
     }
 
-    const verifyOptions = (options ) => {
+    const verifyOptions = (options) => {
         if (options.length > 0) {
             return true;
         } else {
             alert("You haven't entered any options")
         }
     }
-    
+
+    const verifyCorrectAnswers = (correctAnswers) => {
+        if (correctAnswers.length > 0) {
+            return true;
+        } else {
+            alert("Please select your correct answer(s)")
+        }
+    }
+
     return (
         <View>
             <Text>In the making of a new question!</Text>
@@ -41,7 +52,23 @@ const DraftQuestion= ({history, location}) => {
             <FlatList 
                 data={options}
                 extraData={options}
-                renderItem={({item}) => <Text>{(item.optionIndex + 10).toString(36).toUpperCase()}. {item.option}</Text>}
+                renderItem={({item, index}) => (
+                    <View style={styles.option}>
+                        <Text>
+                            {(item.optionIndex + 10).toString(36).toUpperCase()}. {item.option}
+                        </Text>
+                        <TouchableOpacity 
+                            style={styles.correct, {backgroundColor: (pressedIndices[index] ? "honeydew" : "white")}}
+                            onPress={() => {
+                                setPressedIndices([...pressedIndices.slice(0, index), 
+                                    !pressedIndices[index], 
+                                    ...pressedIndices.slice(index + 1)]);}
+                            }>
+                            <Text>correct</Text>
+                        </TouchableOpacity>
+                    </View> 
+                    )
+                }
                 keyExtractor={(item) => item.optionIndex}
                 style={styles.flatList}
             />
@@ -56,6 +83,7 @@ const DraftQuestion= ({history, location}) => {
                 onPress={() => {
                     if (verifyString(option)) {
                         setOptions([...options, {optionIndex, option}]);
+                        setPressedIndices([...pressedIndices, false]);
                         setOptionIndex(optionIndex + 1);
                         setOption(null);
                     }
@@ -64,17 +92,24 @@ const DraftQuestion= ({history, location}) => {
 
             <Button title="Save and go back" 
                 onPress={() => {
-                    if (verifyString(prompt) && verifyOptions) {
+                    let correctAnswers = [];
+                    for (let i=0; i < pressedIndices.length; i++) {
+                        if (pressedIndices[i]) {
+                            correctAnswers.push(i);
+                        }
+                    }
+                    if (verifyString(prompt) && verifyOptions(options) && verifyCorrectAnswers(correctAnswers)) {
                     history.push('/components/DraftQuestions', 
                         {questions: 
                             [...(location.state.questions || []), 
                                 {questionIndex: 
                                     (location.state.questions ? location.state.questions.length : 0), 
-                                    prompt, options}],
+                                    prompt, options, correctAnswers}],
                         name: location.state.name,
                         isHost: location.state.isHost,
                         gameLink: location.state.gameLink,
-                                });
+                        round: location.state.round
+                        });
                     }}}
                 />
             <Button title="Go back without saving" 
@@ -83,7 +118,8 @@ const DraftQuestion= ({history, location}) => {
                         {questions: location.state.questions,
                         gameLink: location.state.gameLink,
                         name: location.state.name,
-                        isHost: location.state.isHost
+                        isHost: location.state.isHost,
+                        round: location.state.round
                         });
                     }}
                 />
@@ -94,6 +130,13 @@ const DraftQuestion= ({history, location}) => {
 const styles = StyleSheet.create({
     flatList: {
         flexGrow: 0
+    }, 
+    option: {
+        flexDirection: "row",
+        justifyContent: 'space-between'
+    },
+    correct: {
+        marginLeft: 1,
     }
 });
 

@@ -13,8 +13,8 @@ const DraftQuestions = ({history, location}) => {
         }
     }
 
-    console.log(location.state.questions);
-    console.log(location.state.gameLink);
+    //TODO: clear ready status
+    //TODO: clear points set to null
 
     return (
         <View>
@@ -37,7 +37,8 @@ const DraftQuestions = ({history, location}) => {
                     gameLink: location.state.gameLink,
                     questions: location.state.questions,
                     name: location.state.name, 
-                    isHost: location.state.isHost
+                    isHost: location.state.isHost,
+                    round: location.state.round
                 })}
             />
 
@@ -51,7 +52,9 @@ const DraftQuestions = ({history, location}) => {
                             gameLink: location.state.gameLink, 
                             name: location.state.name, 
                             isHost: location.state.isHost,
-                            questions: location.state.questions});
+                            questions: location.state.questions,
+                            round: location.state.round
+                        });
                     
                 }}
             />

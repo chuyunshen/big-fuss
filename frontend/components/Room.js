@@ -23,7 +23,9 @@ const Room = ({history, location}) => {
         history.push('/components/DraftQuestions', 
             {
                 gameLink: location.state.gameLink, 
+                round: location.state.round,
                 name,
+                round: location.state.round,
                 isHost});
     }
 

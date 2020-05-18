@@ -5,39 +5,102 @@ import { View, Text, StyleSheet, Button, TextInput, FlatList, ActivityIndicator}
 
 const ScoreBoard = ({history, location}) => {
 
-    const [points, setPoints] = useState(null);
+    const [ranking, setRanking] = useState(null);
 
-    const checkAnswersAndIncrementPoints = () => {
+    const calculatePoints = () => {
         let count = 0;
-        console.log("questions");
-        console.log(location.state.questions);
-        console.log("player answers");
-        console.log(location.state.playerAnswers);
         for (let i=0; i < location.state.questions.length; i++) {
-            console.log("correct");
-            console.log(location.state.questions[i].correctAnswers.sort());
-            console.log("player");
-            console.log(location.state.playerAnwers[i]);
-            if (location.state.questions[i].correctAnswers.sort() === 
-                location.state.playerAnswers[i].sort()) {
-                    console.log("incr");
+            const correctAnswers = JSON.stringify(location.state.questions[i].correctAnswers.sort());
+            const playerAnswers = JSON.stringify(location.state.playerAnswers[i].answers.sort());
+            if (correctAnswers === playerAnswers) {
                 count++;
             }
         }
-        setPoints(count);
+        return count;
     }
 
+    const sendPoints = (points) => {
+        fetch(`${location.state.gameLink}/players`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                name: location.state.name,
+                isReady: true,
+                isHost: location.state.isHost,
+                points
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }})
+    }
+
+    const comparePoints = (a, b) => {
+        if ( a.points > b.points ){
+          return -1;
+        }
+        if ( a.points < b.points ){
+          return 1;
+        }
+        return 0;
+      }
+      
+    const compareName = (a, b) => {
+        if ( a.name < b.name ){
+          return -1;
+        }
+        if ( a.name > b.name ){
+          return 1;
+        }
+        return 0;
+      }
+
+    const getRanking = () => {
+        fetch(`${location.state.gameLink}/players`)
+        .then(response => response.json())
+        .then((players) => {
+            players.sort(compareName);
+            players.sort(comparePoints);
+            setRanking(players);
+        });
+    }
+
+    useEffect(() => { sendPoints(calculatePoints());}, [])
+
     useEffect(() => {
-        checkAnswersAndIncrementPoints();
+        const interval = setInterval(() => {
+            getRanking();
+        }, 5000);
+        return () => clearInterval(interval);
     }, [])
-    
+
     return (
         <View>
             <Text>Score Board</Text>
-            {points ? 
-                (<Text>Your Points: {points}</Text>) :
-                <ActivityIndicator />
+            <Text>Out of {location.state.questions.length} questions</Text>
+            {ranking ? 
+                (<FlatList 
+                    style={styles.flatList}
+                    data={ranking}
+                    renderItem={({item}) => <Text>{item.name} got {item.points} points </Text>}>
+                </FlatList>
+                ) : <ActivityIndicator />
             }
+
+            <Button 
+                title="Play Again with the same players" 
+                onPress={() => {
+                    history.push('/components/DraftQuestions', {
+                        gameLink: location.state.gameLink,
+                        name: location.state.name,
+                        isHost: location.state.isHost,
+                        round: location.state.round + 1,
+                    })
+                }}
+            />
+            <Button 
+                title="Return Home" 
+                onPress={() => history.push('/')}
+            />
         </View>
     )
 };

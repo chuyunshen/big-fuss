@@ -1,6 +1,7 @@
 import React, { useState, useEffect }from 'react';
 import {View, ScrollView, Text, Button, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
 import {API_BASE_URL} from './URLs';
+import Question from './Question';
 
 const ReadyRoom = ({history, location}) => {
 
@@ -17,7 +18,37 @@ const ReadyRoom = ({history, location}) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }})
+            }});
+    }
+
+    /* Post a question to the API */
+    const sendQuestions = () => {
+        for (const question of location.state.questions) {
+            let options = [];
+            for (const option in question.options) {
+                options.push(option.option);
+            }
+            console.log(question);
+            console.log(JSON.stringify({
+                playerName: location.state.name,
+                prompt: question.prompt,
+                options: question.options,
+                correctAnswers: question.correctAnswers
+            }));
+            fetch(`${location.state.gameLink}/questions/${location.state.round}`, {
+                method: 'POST',
+                mode: 'cors',
+                body: JSON.stringify({
+                    playerName: location.state.name,
+                    prompt: question.prompt,
+                    options: question.options,
+                    correctAnswers: question.correctAnswers
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+            }}).catch(error => console.log(error))
+        }
     }
 
     const getReadyPlayers = () => {
@@ -34,12 +65,10 @@ const ReadyRoom = ({history, location}) => {
         fetch(`${location.state.gameLink}/players`)
             .then(response => response.json())
             .then((response) => {
-                console.log(response);
                 const players = response.filter(player => player.isReady);
                 if (players.length == response.length) {
                     history.push('/components/Questions', {
                         gameLink: location.state.gameLink,
-                        question: location.state.questions,
                         isHost: location.state.isHost,
                         name: location.state.name});
                     };
@@ -48,6 +77,7 @@ const ReadyRoom = ({history, location}) => {
 
     useEffect(() => {
         makeReady();
+        sendQuestions();
     }, [])
 
     useEffect(() => {

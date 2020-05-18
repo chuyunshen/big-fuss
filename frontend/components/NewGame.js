@@ -40,7 +40,8 @@ const NewGame = ({history}) => {
                 gameType: "personal",
                 roomSize
             };
-            fetch(`${API_BASE_URL}/games`, {method: 'POST',
+            fetch(`${API_BASE_URL}/games`, {
+                method: 'POST',
                 mode: 'cors',
                 body: JSON.stringify(payload),
                 headers: {
@@ -52,7 +53,7 @@ const NewGame = ({history}) => {
                     console.log(response);
                     setGameLink(response._links.game);
                     setSecretCode(secretCode.toLowerCase());
-                    history.push('/components/Room', {gameLink, secretCode, name});
+                    history.push('/components/Room', {gameLink, secretCode, name, round: 0});
                     }
                 )
                 // .catch(() => {
