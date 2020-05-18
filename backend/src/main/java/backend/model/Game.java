@@ -8,11 +8,11 @@ import java.util.HashMap;
 public class Game {
     private Player host;
     private ArrayList<Player> players;
+    // An array of questions for each round in game
+    private HashMap<Integer, ArrayList<Question>> questions;
     @Id
     private String id;
     private String secretCode;
-    private ArrayList<Question> questions;
-    private HashMap<String, Integer> points;
     private String gameType;
     private Integer roomSize;
 
@@ -32,12 +32,8 @@ public class Game {
         return secretCode;
     }
 
-    public ArrayList<Question> getQuestions() {
+    public HashMap<Integer, ArrayList<Question>> getQuestions() {
         return questions;
-    }
-
-    public HashMap<String, Integer> getPoints() {
-        return points;
     }
 
     public String getGameType() {
@@ -53,10 +49,9 @@ public class Game {
         this.players = new ArrayList<>();
         players.add(host);
         this.secretCode = secretCode;
-        this.questions = new ArrayList<>();
+        this.questions = new HashMap<>();
         this.gameType = gameType;
         this.roomSize = roomSize;
-        this.points = new HashMap<>();
     }
 
 
@@ -72,12 +67,16 @@ public class Game {
         }
     }
 
-    public void addQuestion(Question question) {
-        questions.add(question);
-    }
-
-    public void incrementPoint(String playerId) {
-        points.merge(playerId, 1, Integer::sum);
+    public void addQuestion(Integer round, Question question) {
+        if (questions.containsKey(round)) {
+            ArrayList<Question> oldQuestions = questions.get(round);
+            oldQuestions.add(question);
+            questions.put(round, oldQuestions);
+        } else {
+            ArrayList<Question> newQuestions = new ArrayList<>();
+            newQuestions.add(question);
+            questions.put(round, newQuestions);
+        }
     }
 
     public Boolean validateSecretCode(String secretCode) {

@@ -40,9 +40,9 @@ public class PopulateRepositoryService {
         Game game = new Game(player, "hot sauce", "personal", roomSize);
         game.addPlayer(player2);
         game.addPlayer(player3);
-        game.addQuestion(question);
-        game.addQuestion(question2);
-        game.addQuestion(question3);
+        game.addQuestion(0, question);
+        game.addQuestion(0, question2);
+        game.addQuestion(0, question3);
         gameRepository.save(game);
     }
 }

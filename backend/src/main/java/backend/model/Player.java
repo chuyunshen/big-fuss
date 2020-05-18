@@ -33,7 +33,7 @@ public class Player {
         return name;
     }
 
-    public String getPoints() {
-        return name;
+    public Integer getPoints() {
+        return points;
     }
 }

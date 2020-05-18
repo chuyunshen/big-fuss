@@ -46,8 +46,7 @@ public class Question {
         this.options = options;
     }
 
-
-    public List getOptions() {
+    public List<String> getOptions() {
         return options;
     }
 
