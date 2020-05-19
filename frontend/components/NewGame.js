@@ -1,22 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {ActivityIndicator} from 'react-native';
 import { StyleSheet, View, Text, TextInput, Button} from 'react-native';
 import { API_BASE_URL } from './URLs';
-
 
 const NewGame = ({history}) => {
     const [secretCode, setSecretCode] = useState('');
     const [gameLink, setGameLink] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [json, setJson] = useState(null);
-    const [name, setName] = useState(null);
+    const [name, setName] = useState('');
 
     const verifySecretCode = (secretCode) => {
         if (secretCode.trim() === '') {
             alert("Secret code cannot be blank.");
             return false;
         } else if (secretCode.trim().length < 6){
-            alert("Secret code needs to be at least 5 characters.");
+            alert("Secret code too short.");
             return false;
         } else {
             setSecretCode(secretCode.toLowerCase());
@@ -24,11 +23,31 @@ const NewGame = ({history}) => {
         }
     };
 
-    const startNewGame = (secretCode, history) => {
-        if (verifySecretCode(secretCode)) {
+    const verifyName = (name) => {
+        if (name.trim() === '') {
+            alert("This is your one opportunity to name yourself");
+            return false;
+        } else if (name.trim().length < 6){
+            alert("Name too short");
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    const goToRoom = () => {
+        if (secretCode && gameLink) {
+            history.push('/components/Room', {gameLink, secretCode, name, round: 0});
+        }
+    }
+
+    useEffect(() => {goToRoom()})
+
+    const startNewGame = (secretCode) => {
+        if (verifySecretCode(secretCode) && verifyName(name)) {
             let payload = {
-                host: {isHost: true, name: "hehe"},
-                secretCode,
+                host: {isHost: true, name},
+                secretCode: secretCode.toLowerCase(),
                 gameType: "personal",
             };
             fetch(`${API_BASE_URL}/games`, {
@@ -41,9 +60,8 @@ const NewGame = ({history}) => {
                 }})
                 .then((response) => response.json())
                 .then((response) => {
-                    setGameLink(response._links.game);
+                    setGameLink(response._links.game.href);
                     setSecretCode(secretCode.toLowerCase());
-                    history.push('/components/Room', {gameLink, secretCode, name, round: 0});
                     }
                 )
         }
@@ -51,9 +69,6 @@ const NewGame = ({history}) => {
 
     return (
         <View style={styles.view}>
-            {isLoading ? <ActivityIndicator/> : (
-                <Text>{json} hiiii</Text>
-            )}
             <Text style={styles.text}>Make up a secret code such as "hot sauce", {"\n"}
             and let the other players know:</Text>
             <TextInput
@@ -69,7 +84,7 @@ const NewGame = ({history}) => {
             </TextInput>
             <Button title="Start New Game"
                     onPress={() => {
-                        startNewGame(secretCode, history)
+                        startNewGame(secretCode);
                     }}
             />
             <Button title="Return to home page" onPress={() => history.push('/')} />

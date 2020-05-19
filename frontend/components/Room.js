@@ -5,20 +5,17 @@ import {API_BASE_URL} from './URLs';
 const Room = ({history, location}) => {
 
     const [players, setPlayers] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [isHost, setIsHost] = useState(false);
-    const [isLoadingHost, setIsLoadingHost] = useState(true);
 
     const getPlayers = () => {
-        fetch(`${location.state.gameLink}`)
+        console.log(`${location.state.gameLink}/players`);
+        fetch(`${location.state.gameLink}/players`)
             .then(response => response.json())
-            .then((response) => {
-                setPlayers(response.players);
-            })
-    }
+            .then((response) => { setPlayers(response.players)})
+            .catch((error) => console.log(error))
+        }
 
-    const startGame = (name) => {
-        fetch(`${location.state.gameLink}`)
+    const startGame = () => {
         history.push('/components/DraftQuestions', 
             {
                 gameLink: location.state.gameLink, 
@@ -39,14 +36,14 @@ const Room = ({history, location}) => {
                     method: 'POST',
                     body: JSON.stringify({
                         isHost: false,
-                        name,
+                        name: location.state.name,
                         isReady: false
                     }),
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     }
-                })
+                }).catch(() => console.log(checkIsHost));
             }
         })
     }
@@ -83,7 +80,7 @@ const Room = ({history, location}) => {
             )}
 
             {  !isHost ? <Text>
-                Waiting for all the players to enter and room...
+                Waiting for other players to enter and room...
                     </Text> : (
                 <View>
                     <Text>You are the host! {"\n"}
@@ -92,7 +89,7 @@ const Room = ({history, location}) => {
                     <Button 
                     title="Start the game"
                     onPress= {() => {
-                        startGame(location.state.name);
+                        startGame();
                     }}
                     />
                 </View>
