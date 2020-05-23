@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList} from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList} from 'react-native';
+import { Button } from 'react-native-elements';
 
 const DraftQuestions = ({history, location}) => {
     const [readyButtonColor, setReadyButtonColor] = useState('lightblue');

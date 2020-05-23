@@ -1,7 +1,8 @@
 import React, { useState, useEffect }from 'react';
-import {View, ScrollView, Text, Button, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
+import {View, ScrollView, Text, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
 import {API_BASE_URL} from './URLs';
 import Question from './Question';
+import { Button } from 'react-native-elements';
 
 const ReadyRoom = ({history, location}) => {
 

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { View, Text, StyleSheet, Button, FlatList, Image, TouchableOpacity, TouchableHighlight} from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TouchableHighlight} from 'react-native';
+import { Button } from 'react-native-elements';
 
 //TODO: add a timer
 const Question = (props) => {

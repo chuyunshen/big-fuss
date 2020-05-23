@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Button, TextInput, FlatList, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator} from 'react-native';
+import { Button } from 'react-native-elements';
 
 //TODO: add correct answer by highliting
 

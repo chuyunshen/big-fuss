@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, StyleSheet, Button} from 'react-native';
+import { View, Text, TextInput, StyleSheet} from 'react-native';
 import { API_BASE_URL } from './URLs';
+import { Button } from 'react-native-elements';
 
 const JoinGame = ({ history }) => {
     const [name, setName] = useState('');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect }from 'react';
-import {View, Text, Button, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
 import {API_BASE_URL} from './URLs';
+import { Button } from 'react-native-elements';
 
 const Room = ({history, location}) => {
 
@@ -88,9 +89,7 @@ const Room = ({history, location}) => {
                     </Text>
                     <Button 
                     title="Start the game"
-                    onPress= {() => {
-                        startGame();
-                    }}
+                    onPress= {() => { startGame(); }}
                     />
                 </View>
             )}

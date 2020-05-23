@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {ActivityIndicator} from 'react-native';
-import { StyleSheet, View, Text, TextInput, Button} from 'react-native';
+import { StyleSheet, View, Text, TextInput} from 'react-native';
+import {Button} from 'react-native-elements';
 import { API_BASE_URL } from './URLs';
 
 const NewGame = ({history}) => {
     const [secretCode, setSecretCode] = useState('');
     const [gameLink, setGameLink] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [json, setJson] = useState(null);
     const [name, setName] = useState('');
 
     const verifySecretCode = (secretCode) => {

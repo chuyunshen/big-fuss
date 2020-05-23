@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Button, TextInput, FlatList, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity} from 'react-native';
+import { Button, CheckBox} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+Icon.loadFont();
 
-//TODO: add correct answer by highliting
 
-const DraftQuestion= ({history, location}) => {
+const DraftQuestion = ({history, location}) => {
 
     const [prompt, setPrompt] = useState('');
     const [option, setOption] = useState('');
@@ -36,6 +38,7 @@ const DraftQuestion= ({history, location}) => {
         }
     }
 
+    console.log(pressedIndices);
     return (
         <View>
             <Text>In the making of a new question!</Text>
@@ -57,15 +60,13 @@ const DraftQuestion= ({history, location}) => {
                         <Text>
                             {(item.optionIndex + 10).toString(36).toUpperCase()}. {item.option}
                         </Text>
-                        <TouchableOpacity 
-                            style={styles.correct, {backgroundColor: (pressedIndices[index] ? "honeydew" : "white")}}
+                        <CheckBox 
+                            checked={pressedIndices[index]} 
                             onPress={() => {
                                 setPressedIndices([...pressedIndices.slice(0, index), 
                                     !pressedIndices[index], 
                                     ...pressedIndices.slice(index + 1)]);}
-                            }>
-                            <Text>correct</Text>
-                        </TouchableOpacity>
+                            } />
                     </View> 
                     )
                 }
@@ -104,7 +105,9 @@ const DraftQuestion= ({history, location}) => {
                             [...(location.state.questions || []), 
                                 {questionIndex: 
                                     (location.state.questions ? location.state.questions.length : 0), 
-                                    prompt, options, correctAnswers}],
+                                    prompt, 
+                                    options, 
+                                    correctAnswers}],
                         name: location.state.name,
                         isHost: location.state.isHost,
                         gameLink: location.state.gameLink,
@@ -141,3 +144,13 @@ const styles = StyleSheet.create({
 });
 
 export default DraftQuestion;
+
+//                        <TouchableOpacity 
+//                            style={styles.correct, {backgroundColor: (pressedIndices[index] ? "honeydew" : "white")}}
+//                            onPress={() => {
+//                                setPressedIndices([...pressedIndices.slice(0, index), 
+//                                    !pressedIndices[index], 
+//                                    ...pressedIndices.slice(index + 1)]);}
+//                            }>
+//                            <Text>correct</Text>
+//                        </TouchableOpacity>
