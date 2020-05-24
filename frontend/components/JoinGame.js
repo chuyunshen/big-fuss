@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, StyleSheet} from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import { API_BASE_URL } from './URLs';
-import { Button } from 'react-native-elements';
+import { Button, Text, Input } from 'react-native-elements';
 
 const JoinGame = ({ history }) => {
     const [name, setName] = useState('');
@@ -29,17 +29,17 @@ const JoinGame = ({ history }) => {
     return (
         <View style={styles.view}>
             <Text>Enter your room's secret code here</Text>
-            <TextInput
+            <Input
                 placeholder="Secret code here. E.g., Hot Sauce"
                 value={secretCode}
                 onChangeText={text => setSecretCode(text)}>
-            </TextInput>
+            </Input>
             <Text>Give yourself a nickname:</Text>
-            <TextInput
+            <Input
                 placeholder="Your name"
                 value={name}
                 onChangeText={text => setName(text)}>
-            </TextInput>
+            </Input>
             <Button title="Submit" onPress={() => {
                 if (verifyName(name)) {
                     setSecretCode(secretCode.toLowerCase());

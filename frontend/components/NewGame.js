@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {ActivityIndicator} from 'react-native';
-import { StyleSheet, View, Text, TextInput} from 'react-native';
-import {Button} from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text, Input } from 'react-native-elements';
 import { API_BASE_URL } from './URLs';
 
 const NewGame = ({history}) => {
@@ -68,19 +67,19 @@ const NewGame = ({history}) => {
 
     return (
         <View style={styles.view}>
-            <Text style={styles.text}>Make up a secret code such as "hot sauce", {"\n"}
+            <Text>Make up a secret code such as "hot sauce", 
             and let the other players know:</Text>
-            <TextInput
+            <Input
                 placeholder="Your secret code"
                 value={secretCode}
                 onChangeText={text => setSecretCode(text)}>
-            </TextInput>
+            </Input>
             <Text>Give yourself a nickname:</Text>
-            <TextInput
+            <Input
                 placeholder="Your name"
                 value={name}
                 onChangeText={text => setName(text)}>
-            </TextInput>
+            </Input>
             <Button title="Start New Game"
                     onPress={() => {
                         startNewGame(secretCode);
@@ -93,7 +92,6 @@ const NewGame = ({history}) => {
 
 const styles = StyleSheet.create({
     view: {marginTop: 50, justifyContent: "center", alignItems: "center"},
-    text: {fontSize: 20, textAlign: "center"}
 });
 
 export default NewGame;

@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator} from 'react-native';
-import { Button } from 'react-native-elements';
-
-//TODO: add correct answer by highliting
+import { View, StyleSheet, TextInput, FlatList, ActivityIndicator} from 'react-native';
+import { Button, Text } from 'react-native-elements';
+import Emoji from 'react-native-emoji';
 
 const ScoreBoard = ({history, location}) => {
 
@@ -75,20 +74,33 @@ const ScoreBoard = ({history, location}) => {
     }, [])
 
     return (
-        <View>
-            <Text>Score Board</Text>
-            <Text>Out of {location.state.questions.length} questions</Text>
+        <View style={styles.view}>
+            <Text style={styles.scoreBoard}>Score Board</Text>
+            <Text style={styles.totalQuestions}>Out of {location.state.questions.length} questions</Text>
             {ranking ? 
                 (<FlatList 
                     style={styles.flatList}
                     data={ranking}
-                    renderItem={({item}) => <Text>{item.name} got {item.points} points </Text>}>
+                    renderItem={({item, index}) => (
+                          <View style={styles.rank}>
+                            {index == 0 ? <Emoji name="first_place_medal" style={{textAlign: 'left', fontSize: 30}} /> : null}
+                            {index == 1 ? <Emoji name="second_place_medal" style={{textAlign: 'left', fontSize: 30}} /> : null}
+                            {index == 2 ? <Emoji name="third_place_medal" style={{textAlign: 'left', fontSize: 30}} /> : null}
+                            {index > 2 ? <View style={styles.place}>
+                                <Text>{index + 1}</Text>
+                            </View> : null}
+                            
+                            <Text>{item.name}</Text> 
+                            <Text style={styles.point}>{item.points}</Text>
+                        </View>
+                        )}
+                        >
                 </FlatList>
                 ) : <ActivityIndicator />
             }
 
             <Button 
-                title="Play Again with the same players" 
+                title="Play again with the same players" 
                 onPress={() => {
                     history.push('/components/DraftQuestions', {
                         gameLink: location.state.gameLink,
@@ -99,7 +111,7 @@ const ScoreBoard = ({history, location}) => {
                 }}
             />
             <Button 
-                title="Return Home" 
+                title="Return home" 
                 onPress={() => history.push('/')}
             />
         </View>
@@ -107,9 +119,46 @@ const ScoreBoard = ({history, location}) => {
 };
 
 const styles = StyleSheet.create({
+    view: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    scoreBoard: {
+        fontFamily: "ChelseaMarket-Regular",
+        fontSize: 40,
+        textAlign: 'center',
+    },
+    totalQuestions: {
+        color: 'grey'
+    },
     flatList: {
-        flexGrow: 0
+        flexGrow: 0,
+        marginBottom: 20
+    },
+    rank: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderRadius: 20,
+        borderColor: 'lightyellow',
+        borderStyle: 'solid',
+        margin: 3,
+        borderWidth: 2,
+        padding: 5,
+        width: 300,
+    },
+    place: {
+        borderRadius: 20,
+        width: 40,
+        height: 40,
+        backgroundColor: 'lightyellow',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    point: {
+        marginRight: 10
     }
+
+
 });
 
 export default ScoreBoard;

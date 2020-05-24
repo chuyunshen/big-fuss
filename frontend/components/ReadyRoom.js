@@ -1,8 +1,6 @@
 import React, { useState, useEffect }from 'react';
-import {View, ScrollView, Text, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
-import {API_BASE_URL} from './URLs';
-import Question from './Question';
-import { Button } from 'react-native-elements';
+import {View, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
+import { Text } from 'react-native-elements';
 
 const ReadyRoom = ({history, location}) => {
 
@@ -85,11 +83,7 @@ const ReadyRoom = ({history, location}) => {
 
     return (
         <View>
-            <Text>
-                Hi, {location.state.name}! {"\n"} 
-            </Text>
-
-            <Text>Players who have submitted their questions: </Text>
+            <Text style={{textAlign: 'center'}}>Players who have submitted their questions: </Text>
             { !readyPlayers ? <ActivityIndicator /> : (
                 <View>
                     <FlatList
@@ -102,7 +96,7 @@ const ReadyRoom = ({history, location}) => {
                 </View>
             )}
 
-            <Text>Please get ready.{"\n"}
+            <Text style={{textAlign: 'center', width: 350}}>Please get ready.
             Game will start as soon as all players have submitted their questions.</Text>
         </View>
     )

@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity} from 'react-native';
-import { Button, CheckBox} from 'react-native-elements';
+import React, {useState, useEffect, useRef} from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { Button, CheckBox, Input, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 Icon.loadFont();
-
 
 const DraftQuestion = ({history, location}) => {
 
@@ -12,10 +11,11 @@ const DraftQuestion = ({history, location}) => {
     const [options, setOptions] = useState([]);
     const [optionIndex, setOptionIndex] = useState(0);
     const [pressedIndices, setPressedIndices] = useState([]);
+    const refContainer = useRef(null);
 
-    const verifyString = (string) => {
+    const verifyString = (string, type) => {
         if ((!string) || (string.trim() === '')) {
-            alert("Field cannot be blank")
+            alert(`${type} cannot be blank`)
             return false;
         } else {
             return true;
@@ -23,7 +23,7 @@ const DraftQuestion = ({history, location}) => {
     }
 
     const verifyOptions = (options) => {
-        if (options.length > 0) {
+        if (options.length) {
             return true;
         } else {
             alert("You haven't entered any options")
@@ -31,36 +31,48 @@ const DraftQuestion = ({history, location}) => {
     }
 
     const verifyCorrectAnswers = (correctAnswers) => {
-        if (correctAnswers.length > 0) {
+        if (correctAnswers.length) {
             return true;
         } else {
             alert("Please select your correct answer(s)")
         }
     }
 
-    console.log(pressedIndices);
-    return (
-        <View>
-            <Text>In the making of a new question!</Text>
+    useEffect(() => {
+        if ("questionIndex" in location.state) {
+            setPrompt(location.state.questions[location.state.questionIndex].prompt);
+            setOptions(location.state.questions[location.state.questionIndex].options);
+            setPressedIndices(location.state.questions[location.state.questionIndex].pressedIndices);
+        }
+    }, [])
 
-            <Text>Your prompt</Text>
-            <TextInput 
+    return (
+        <View style={ styles.view }>
+            <Text>In the making of a new question!</Text>
+            <Text>Add a question:</Text>
+            <Input 
                 placeholder="prompt" 
-                value={prompt} 
+                value={ prompt } 
                 onChangeText={(prompt) => setPrompt(prompt)}
             />
 
-            <Text>Your options: </Text>
+            <Text>Add options and select the correct one(s): </Text>
 
             <FlatList 
+                ref={refContainer}
+                onContentSizeChange={()=>{   
+                    if(refContainer.current){
+                        refContainer.current.scrollToEnd();
+                    }}}
+                keyboardShouldPersistTaps='handled'
                 data={options}
                 extraData={options}
                 renderItem={({item, index}) => (
                     <View style={styles.option}>
-                        <Text>
+                        <Text style={{margin: 0}}>
                             {(item.optionIndex + 10).toString(36).toUpperCase()}. {item.option}
                         </Text>
-                        <CheckBox 
+                        <CheckBox
                             checked={pressedIndices[index]} 
                             onPress={() => {
                                 setPressedIndices([...pressedIndices.slice(0, index), 
@@ -74,7 +86,7 @@ const DraftQuestion = ({history, location}) => {
                 style={styles.flatList}
             />
 
-            <TextInput 
+            <Input 
                 placeholder="Enter an option here" 
                 value={option} 
                 onChangeText={(option) => setOption(option)}
@@ -82,7 +94,7 @@ const DraftQuestion = ({history, location}) => {
             <Button 
                 title='Add option' 
                 onPress={() => {
-                    if (verifyString(option)) {
+                    if (verifyString(option, "Option")) {
                         setOptions([...options, {optionIndex, option}]);
                         setPressedIndices([...pressedIndices, false]);
                         setOptionIndex(optionIndex + 1);
@@ -99,20 +111,36 @@ const DraftQuestion = ({history, location}) => {
                             correctAnswers.push(i);
                         }
                     }
-                    if (verifyString(prompt) && verifyOptions(options) && verifyCorrectAnswers(correctAnswers)) {
-                    history.push('/components/DraftQuestions', 
-                        {questions: 
-                            [...(location.state.questions || []), 
+                    if (verifyString(prompt, "Prompt") && verifyOptions(options) && verifyCorrectAnswers(correctAnswers)) {
+
+                        let questionsToAppend = {};
+                        // if is editting an existing question
+                        if ("questionIndex" in location.state) {
+                            location.state.questions[location.state.questionIndex] = {
+                                    questionIndex: 
+                                        (location.state.questionIndex), 
+                                    prompt, 
+                                    options, 
+                                    correctAnswers,
+                                    pressedIndices}
+                            questionsToAppend = location.state.questions;
+                        } else {
+                        // if it's a new question
+                            questionsToAppend = [...(location.state.questions || []), 
                                 {questionIndex: 
                                     (location.state.questions ? location.state.questions.length : 0), 
                                     prompt, 
                                     options, 
-                                    correctAnswers}],
-                        name: location.state.name,
-                        isHost: location.state.isHost,
-                        gameLink: location.state.gameLink,
-                        round: location.state.round
-                        });
+                                    correctAnswers,
+                                    pressedIndices}];
+                        }
+                        history.push('/components/DraftQuestions', {
+                            questions: questionsToAppend, 
+                            name: location.state.name,
+                            isHost: location.state.isHost,
+                            gameLink: location.state.gameLink,
+                            round: location.state.round
+                            });
                     }}}
                 />
             <Button title="Go back without saving" 
@@ -131,26 +159,20 @@ const DraftQuestion = ({history, location}) => {
 };
 
 const styles = StyleSheet.create({
+    view: {
+        maxHeight: '80%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     flatList: {
+        margin: 0,
         flexGrow: 0
     }, 
     option: {
         flexDirection: "row",
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    correct: {
-        marginLeft: 1,
-    }
 });
 
 export default DraftQuestion;
-
-//                        <TouchableOpacity 
-//                            style={styles.correct, {backgroundColor: (pressedIndices[index] ? "honeydew" : "white")}}
-//                            onPress={() => {
-//                                setPressedIndices([...pressedIndices.slice(0, index), 
-//                                    !pressedIndices[index], 
-//                                    ...pressedIndices.slice(index + 1)]);}
-//                            }>
-//                            <Text>correct</Text>
-//                        </TouchableOpacity>

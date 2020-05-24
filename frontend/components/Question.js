@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TouchableHighlight} from 'react-native';
-import { Button } from 'react-native-elements';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Button, Text } from 'react-native-elements';
 
-//TODO: add a timer
 const Question = (props) => {
 
     const [answers, setAnswers] = useState([]);
@@ -10,6 +9,7 @@ const Question = (props) => {
     const [result, setResult] = useState(null);
     const [pressed, setPressed] = useState(Array.from(
         '0'.repeat(props.questionItem.options.length)));
+    const [seconds, setSeconds] = useState(15);
 
     const togglePressed = (index) => {
         let pressedCopy = [...pressed];
@@ -35,54 +35,99 @@ const Question = (props) => {
         }
     }
 
+    const goToNextQuestion = () => {
+        checkAnswers();
+        props.appendAnswers(answers);
+        setAnswers([]);
+        setPressed(Array.from(
+            '0'.repeat(props.questionItem.options.length)));
+        setSubmitted(true);
+        props.updateQuestionIndex();
+        setSeconds(15);
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSeconds(seconds - 1);
+            if (seconds == 0) {
+                goToNextQuestion();
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    })
+
     return (
-        <View>
-            <Text>Question: {props.questionNumber}</Text>
+        <View style={styles.view}>
+            <View style={styles.questionNumberView}>            
+                <Text style={styles.questionNumber}>Question {props.questionNumber}</Text>
+            </View>
+
             <Text>{props.questionItem.playerName} asked: </Text>
             <Text>{props.questionItem.prompt}</Text>
             {
-                props.questionItem.options.map( (option, index) => (
-                    <TouchableOpacity 
-                        style={styles.touchableOpacity, 
-                            {backgroundColor: (pressed[index] ? "white" : "lightblue")}}
-                        onPress={() => {
-                            toggleAnswers(index);
-                            togglePressed(index);
-                        }}>
-                            <Text>
-                            {(index + 10).toString(36).toUpperCase()}. {option}
-                            </Text>
-                        </TouchableOpacity>
-                    )
+                props.questionItem.options.map((option, index) => (
+                    <View >
+                        <TouchableOpacity 
+                            style={[styles.option, {backgroundColor: (pressed[index] ? "#EDB1AB" : "lightblue")}]}
+                            onPress={() => {
+                                toggleAnswers(index);
+                                togglePressed(index);
+                            }}>
+                                <Text>
+                                {(index + 10).toString(36).toUpperCase()}. {option}
+                                </Text>
+                            </TouchableOpacity>
+                    </View>
+                        )
                 )}
-            <TouchableOpacity
+            <Button
                 style={styles.touchableOpacity, 
                     {backgroundColor: (submitted ? "white" : "lightgrey")},
                     {color: (submitted ? "black" : "darkgrey")}}
-                onPress={() => {
-                    checkAnswers();
-                    props.appendAnswers(answers);
-                    setAnswers([]);
-                    setPressed(Array.from(
-                        '0'.repeat(props.questionItem.options.length)));
-                    setSubmitted(true);
-                    props.updateQuestionIndex();
-                }}
-            >
-                <Text>Submit Answer</Text>
-            </TouchableOpacity>
+                title="Submit Answer"
+                onPress={goToNextQuestion}
+            />
 
             {result ? (
                 <Text>Result: {}</Text>
-            ) : (<Text>Timer</Text>)
+            ) : (<View style={styles.timer}><Text>{seconds}</Text></View>)
             }
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    touchableOpacity: {},
-    container: {flex: 1, paddingTop: 60},
+    view: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    questionNumber: {
+        fontFamily: 'ChelseaMarket-Regular',
+        fontSize: 40,
+        textAlign: 'right'
+    },
+    option: {
+        borderRadius: 30,
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderColor: 'lightyellow',
+        flexDirection: 'row', 
+        paddingLeft: 20,
+        margin: 5,
+        width: 350
+    },
+    timer: {
+        width: 60,
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'lightblue',
+        borderRadius: 30,
+        margin: 10,
+        borderStyle: 'solid',
+    }
+
 });
 
 export default Question;

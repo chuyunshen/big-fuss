@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList} from 'react-native';
-import { Button } from 'react-native-elements';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import { Button, Text } from 'react-native-elements';
 
 const DraftQuestions = ({history, location}) => {
-    const [readyButtonColor, setReadyButtonColor] = useState('lightblue');
+    const refContainer = useRef(null);
 
     const verifyQuestions = (questions) => {
         if (!questions) {
@@ -18,18 +18,49 @@ const DraftQuestions = ({history, location}) => {
     //TODO: clear points set to null
 
     return (
-        <View>
-            <Text>You can add your personalized questions here!</Text>
+        <View style={styles.view}>
+            <Text styles={{textAlign: 'center'}}>Add your personalized questions here!</Text>
             { location.state.questions ?  (
-            <FlatList 
-                data={location.state.questions}
-                renderItem={({item}) => (
-                    <TouchableOpacity>
-                        <Text>{item.questionIndex + 1}. {item.prompt}</Text>
-                    </TouchableOpacity>)}
-                keyExtractor={(item) => item.questionIndex}
-                style={styles.flatList}
-            />) : <Text>There is no question yet</Text>
+
+            <View style={styles.questions}>
+                <FlatList 
+                    ItemSeparatorComponent={() => {
+                        return (
+                          //Item Separator
+                          <View style={{height: 2, width: '100%', backgroundColor: 'lightyellow'}}/>
+                        );}}
+                    ref={refContainer}
+                    onContentSizeChange={()=>{   
+                        if(refContainer.current){
+                            refContainer.current.scrollToEnd();
+                        }}}
+                    data={location.state.questions}
+                    renderItem={({item, index}) => (
+                        <TouchableOpacity
+                            onPress={() => {
+                                return history.push('/components/DraftQuestion', {
+                                    gameLink: location.state.gameLink,
+                                    questions: location.state.questions,
+                                    name: location.state.name, 
+                                    isHost: location.state.isHost,
+                                    round: location.state.round,
+                                    questionIndex: index
+                                })
+                            }
+                        }>
+                            <Text
+                                styles={styles.question} >
+                                    <Text styles={styles.questionNumber}>Question {item.questionIndex + 1}. </Text>
+                                    {item.prompt.length > 15 ? 
+                                        <Text>{item.prompt.slice(0, 15)}...</Text> : 
+                                        <Text>{item.prompt}</Text>}
+                            </Text>
+                        </TouchableOpacity>)}
+                    keyExtractor={(item) => item.questionIndex}
+                    style={styles.flatList}
+                />
+            </View> 
+            ) : null
             }
 
             <Button 
@@ -44,10 +75,8 @@ const DraftQuestions = ({history, location}) => {
             />
 
             <Button
-                style={styles.readyButtonPressed}
-                title="I'm ready"
+                title="Submit questions"
                 onPress={() => {
-                    setReadyButtonColor('lightpink');
                     verifyQuestions(location.state.questions) && history.push(
                         '/components/ReadyRoom', {
                             gameLink: location.state.gameLink, 
@@ -56,7 +85,6 @@ const DraftQuestions = ({history, location}) => {
                             questions: location.state.questions,
                             round: location.state.round
                         });
-                    
                 }}
             />
 
@@ -65,12 +93,27 @@ const DraftQuestions = ({history, location}) => {
 };
 
 const styles = StyleSheet.create({
+    view: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    questions: {
+        marginTop: 40,
+        marginBottom: 40,
+        padding: 20,
+        borderColor: 'lightyellow',
+        borderStyle: "solid",
+        borderWidth: 3,
+        borderRadius: 30,
+        width: 350,
+    },
     flatList: {
         flexGrow: 0
     },
-    readyButtonPressed: {
-        color: "lightblue"
-    }
+    question: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
 });
 
 export default DraftQuestions;

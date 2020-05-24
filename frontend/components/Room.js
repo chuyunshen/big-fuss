@@ -1,7 +1,6 @@
 import React, { useState, useEffect }from 'react';
-import {View, Text, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
-import {API_BASE_URL} from './URLs';
-import { Button } from 'react-native-elements';
+import {View, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
+import { Button, Text } from 'react-native-elements';
 
 const Room = ({history, location}) => {
 
@@ -12,7 +11,9 @@ const Room = ({history, location}) => {
         console.log(`${location.state.gameLink}/players`);
         fetch(`${location.state.gameLink}/players`)
             .then(response => response.json())
-            .then((response) => { setPlayers(response.players)})
+            .then((response) => { 
+                setPlayers(response);
+            })
             .catch((error) => console.log(error))
         }
 
@@ -56,40 +57,44 @@ const Room = ({history, location}) => {
     useEffect(() => {
         const interval = setInterval(() => {
             getPlayers();
-        }, 2000);
+        }, 100000);
         return () => clearInterval(interval);
     }, [])
 
     return (
         <View style={styles.view}>
-            <Text>
-                Hi, {location.state.name}! {"\n"} 
-                Welcome to the room with secret code: {location.state.secretCode} {"\n"}
+            <Text style={styles.welcome}>
+                Hi, {location.state.name}! 
+                Welcome to the room with secret code:  {"\n"}
             </Text>
+            <Text style={styles.secretCode}>{location.state.secretCode}</Text>
 
-            { !players ? <ActivityIndicator /> : (
-                <View>
-                    <Text>Players that have joined: </Text>
-                    <FlatList
-                        style={styles.flatList}
-                        data={players} 
-                        extraData={players} 
-                        renderItem={({item}) => <Text>{item.name}</Text>}
-                        keyExtractor={(item) => {item.name}}
-                    />
-                </View>
-            )}
+            <View style={styles.players}>
+                <Text>Players that have joined: </Text>
+                { !players ? <ActivityIndicator /> : (
+                    <View>
+                        <FlatList
+                            style={styles.flatList}
+                            data={players} 
+                            extraData={players} 
+                            renderItem={({item}) => <Text style={styles.name}>{item.name}</Text>}
+                            keyExtractor={(item) => {item.name}}
+                        />
+                    </View>
+                )}
+            </View>
 
-            {  !isHost ? <Text>
+            {  !isHost ? <Text style={styles.host}>
                 Waiting for other players to enter and room...
                     </Text> : (
-                <View>
-                    <Text>You are the host! {"\n"}
+                <View style={styles.host}>
+                    <Text style={{textAlign: 'center'}}>
+                    You are the host! 
                     Start the game when all players have entered the room.
                     </Text>
                     <Button 
                     title="Start the game"
-                    onPress= {() => { startGame(); }}
+                    onPress= {startGame}
                     />
                 </View>
             )}
@@ -104,12 +109,44 @@ const Room = ({history, location}) => {
 
 const styles = StyleSheet.create({
     view: {
-        justifyContent: "center", alignItems: "center", flex: 1
+        justifyContent: "center", 
+        alignItems: "center", 
+    },
+    welcome: {
+        textAlign: 'center',
+        width: 300,
+        marginBottom: 0,
+        textAlign: 'center'
+    },
+    secretCode: {
+        marginTop: 0,
+        fontWeight: 'bold',
+        fontSize: 20,
+        fontFamily: "ChelseaMarket-Regular",
+        color: "#07A2CC"
+    },
+
+    players: {
+        borderRadius: 15,
+        borderColor: 'lightyellow',
+        borderWidth: 2,
+        padding: 10,
+        margin: 10 
     },
     flatList: {
-        flexGrow: 0
-    }
+        flexGrow: 0,
+    },
+    name: {
+        marginBottom: 3,
+        textAlign: 'center'
+    },
+    host: {
+        textAlign: 'center',
+        justifyContent: "center", 
+        alignItems: "center", 
+        margin: 30
+        
+    },
 })
-
 
 export default Room;
