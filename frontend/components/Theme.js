@@ -15,7 +15,7 @@ export const theme = {
         },
         buttonStyle: {
             borderRadius: 20,
-            backgroundColor: "#FDEFC8" 
+            backgroundColor: "#D0E4D1" 
         }
     },
 

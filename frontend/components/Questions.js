@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator} from 'react
 import {retrievePlayers, retrieveQuestions} from "../service/QuestionService";
 import Question from "./Question";
 
-
 const Questions = ({history, location}) => {
 
     const [isLoading, setLoading] = useState(true);

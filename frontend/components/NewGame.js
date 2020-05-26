@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Button, Text, Input } from 'react-native-elements';
 import { API_BASE_URL } from './URLs';
 
@@ -9,24 +9,34 @@ const NewGame = ({history}) => {
     const [name, setName] = useState('');
 
     const verifySecretCode = (secretCode) => {
-        if (secretCode.trim() === '') {
-            alert("Secret code cannot be blank.");
-            return false;
-        } else if (secretCode.trim().length < 6){
-            alert("Secret code too short.");
-            return false;
-        } else {
-            setSecretCode(secretCode.toLowerCase());
-            return true;
+        return new Promise ((resolve) => {
+            if (secretCode.trim() === '') {
+                alert("Secret code cannot be blank.");
+                resolve(false);
+            } else if (secretCode.trim().length < 6){
+                alert("Secret code too short.");
+                resolve(false);
+            } else {
+                // verify if this code is already taken
+                fetch(`${API_BASE_URL}secretcodes/${secretCode}`)
+                .then(response => response.json())
+                .then((response) => {
+                    Alert.alert("Sorry bro", `Secret code ${secretCode} is already taken. Please think of another one.`);
+                    resolve(false);
+                })
+                .catch(() => {
+                    setSecretCode(secretCode.toLowerCase());
+                    resolve(true);
+                })
+            };})
         }
-    };
 
     const verifyName = (name) => {
         if (name.trim() === '') {
-            alert("This is your one opportunity to name yourself");
+            Alert.alert("Hello?", "Please cherish your opportunity to name yourself.");
             return false;
         } else if (name.trim().length < 6){
-            alert("Name too short");
+            Alert.alert("Name too short", 'Ya.');
             return false;
         } else {
             return true;
@@ -41,8 +51,10 @@ const NewGame = ({history}) => {
 
     useEffect(() => {goToRoom()})
 
-    const startNewGame = (secretCode) => {
-        if (verifySecretCode(secretCode) && verifyName(name)) {
+    const startNewGame = async (secretCode) => {
+        const secretCodeVerified = await verifySecretCode(secretCode);
+        console.log(secretCodeVerified);
+        if ( secretCodeVerified && verifyName(name)) {
             let payload = {
                 host: {isHost: true, name},
                 secretCode: secretCode.toLowerCase(),
@@ -67,7 +79,7 @@ const NewGame = ({history}) => {
 
     return (
         <View style={styles.view}>
-            <Text>Make up a secret code such as "hot sauce", 
+            <Text style={{textAlign: 'center'}}>Make up a secret code such as "hot sauce", 
             and let the other players know:</Text>
             <Input
                 placeholder="Your secret code"
@@ -88,10 +100,10 @@ const NewGame = ({history}) => {
             <Button title="Return to home page" onPress={() => history.push('/')} />
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
-    view: {marginTop: 50, justifyContent: "center", alignItems: "center"},
+    view: {width: '90%', marginTop: 50, justifyContent: "center", alignItems: "center"},
 });
 
 export default NewGame;

@@ -1,15 +1,21 @@
 import React from 'react';
-import { View, StyleSheet, Image} from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { Button, Text } from 'react-native-elements';
 
 const Home = ({ history }) => {
     return (
         <View style={styles.view}>
             <View style={styles.welcomeView}>
-               <Text style={styles.welcome}>Welcome to Trivial!</Text>
+            <Text style={styles.welcome}>Welcome{"\n"}to{"\n"}Big Fuss!</Text>
             </View>
+            <Image         
+                style={styles.image}
+                source={require('../assets/big_fuss.png')} 
+                >
+
+            </Image>
             <View style={styles.messageView}>
-                <Text style={styles.message}>Play Trivial with your friends by submitting your own trivia questions.</Text>
+                <Text style={styles.message}>Play with your friends by submitting your own trivia questions.</Text>
             </View>
             <Button title="New Game" onPress={() => history.push('/components/NewGame')}/>
             <Button title="Join Game" onPress={() => history.push('/components/JoinGame')}/>
@@ -23,37 +29,27 @@ const styles = StyleSheet.create({
         justifyContent: "center", 
         width: '90%',
     },
-
-    welcomeView: {
-        width: 350,
-        borderStyle: "solid",
-        borderWidth: 10,
-        borderRadius: 30,
-        backgroundColor: '#FDEFC8',
-        borderColor: "#FDD443",
-        marginBottom: 30,
-    },
     welcome: {
         textAlign: 'center',
         fontFamily: "ChelseaMarket-Regular", 
         color: "#0F5B7C",
-        fontSize: 25,
+        fontSize: 60,
         padding: 10,
         paddingTop: 20,
-        paddingBottom: 20,
     },
-
+    image: {
+        width: 220,
+        height: 220,
+        resizeMode: "cover",
+    },
     messageView: {
         margin: 10,
+        marginTop: 0,
         marginBottom: 30,
-        padding: 20,
-        backgroundColor: '#87AAA8',
-        borderRadius: 10,
-        opacity: 1
     },
-
     message: {
-        color: 'white',
+        color: 'grey',
+        fontFamily: "ChelseaMarket-Regular", 
         textAlign: 'center'
     },
 });
