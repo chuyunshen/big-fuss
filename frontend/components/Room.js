@@ -70,7 +70,7 @@ const Room = ({history, location}) => {
             <Text style={styles.secretCode}>{location.state.secretCode}</Text>
 
             <View style={styles.players}>
-                <Text>Players that have joined: </Text>
+                <Text style={{textAlign: 'center'}}>Players that have joined: </Text>
                 { !players ? <ActivityIndicator /> : (
                     <View>
                         <FlatList
@@ -125,20 +125,22 @@ const styles = StyleSheet.create({
         fontFamily: "ChelseaMarket-Regular",
         color: "#07A2CC"
     },
-
     players: {
+        width: 300,
         borderRadius: 15,
         borderColor: 'lightyellow',
-        borderWidth: 2,
+        borderWidth: 4,
         padding: 10,
-        margin: 10 
+        margin: 10,
     },
+
     flatList: {
         flexGrow: 0,
     },
     name: {
         marginBottom: 3,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: "ChelseaMarket-Regular",
     },
     host: {
         textAlign: 'center',

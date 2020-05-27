@@ -5,7 +5,6 @@ import Question from "./Question";
 
 const Questions = ({history, location}) => {
 
-    const [isLoading, setLoading] = useState(true);
     const [questions, setQuestions] = useState(null);
     const [questionIndex, setQuestionIndex] = useState(0);
     const [playerAnswers, setPlayerAnswers] = useState([]);
@@ -15,19 +14,21 @@ const Questions = ({history, location}) => {
             .then((response) => response.json())
             .then((response) => {
                 // get the latest set of questions
+                console.log(response);
+                console.log(Object.keys(response).length);
                 setQuestions(response[Object.keys(response).length - 1]);
             } )
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+            .catch((error) => console.error(error));
     }
 
     useEffect(() => {
         getQuestions();
+    console.log(questions);
     }, []);
 
     // Take to score board
     useEffect(() => {
-        if (!isLoading && questionIndex == questions.length) {
+        if (questions && questionIndex == questions.length) {
             history.push('/components/ScoreBoard', {
                 gameLink: location.state.gameLink,
                 name: location.state.name,
@@ -42,7 +43,7 @@ const Questions = ({history, location}) => {
 
     return (
         <View>
-            {!isLoading && questionIndex < questions.length ? (
+            {questions && questionIndex < questions.length ? (
                 <View>
                     <Question 
                         questionItem={questions[questionIndex]} 

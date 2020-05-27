@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: "ChelseaMarket-Regular", 
         color: "#0F5B7C",
-        fontSize: 60,
+        fontSize: 50,
         padding: 10,
         paddingTop: 20,
     },
