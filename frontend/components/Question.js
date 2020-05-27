@@ -8,12 +8,13 @@ const Question = (props) => {
     const pressedShade = 'lightblue';
     const errorShade = '#EDB1AB';
     const correctShade = '#D0E4D1';
+    const questionDuration = 15;
 
     const [answers, setAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const [pressed, setPressed] = useState(Array(
         props.questionItem.options.length).fill(0));
-    const [seconds, setSeconds] = useState(15);
+    const [seconds, setSeconds] = useState(questionDuration);
     const [colors, setColors] = useState(Array(
         props.questionItem.options.length).fill(backgroundShade));
 
@@ -69,7 +70,7 @@ const Question = (props) => {
         setPressed(Array(props.questionItem.options.length).fill(0));
         setSubmitted(false);
         props.updateQuestionIndex();
-        setSeconds(15);
+        setSeconds(questionDuration);
         setColors(Array(props.questionItem.options.length).fill(backgroundShade));
     }
 

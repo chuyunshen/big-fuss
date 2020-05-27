@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator} from 'react-native';
-import {retrievePlayers, retrieveQuestions} from "../service/QuestionService";
+import {retrievePlayers, retrieveQuestions} from "../backup/service/QuestionService";
 import Question from "./Question";
 
 const Questions = ({history, location}) => {
